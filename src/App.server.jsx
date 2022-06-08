@@ -14,25 +14,25 @@ import LoadingFallback from './components/LoadingFallback';
 import ServerCartProvider from './components/ServerCartProvider.server';
 import {OkendoProvider} from '@okendo/shopify-hydrogen';
 
-function App() {
+function App({request}) {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <ShopifyProvider>
         <OkendoProvider
+          request={request}
           subscriberId={import.meta.env.VITE_OKENDO_SUBSCRIBER_ID}
           apiDomain={import.meta.env.VITE_OKENDO_API_DOMAIN}
           cdnDomain={import.meta.env.VITE_OKENDO_CDN}
-        >
-          <ServerCartProvider>
-            <DefaultSeo />
-            <Router>
-              <FileRoutes />
-              <Route path="*" page={<NotFound />} />
-            </Router>
-          </ServerCartProvider>
-          <PerformanceMetrics />
-          {import.meta.env.DEV && <PerformanceMetricsDebug />}
-        </OkendoProvider>
+        />
+        <ServerCartProvider>
+          <DefaultSeo />
+          <Router>
+            <FileRoutes />
+            <Route path="*" page={<NotFound />} />
+          </Router>
+        </ServerCartProvider>
+        <PerformanceMetrics />
+        {import.meta.env.DEV && <PerformanceMetricsDebug />}
       </ShopifyProvider>
     </Suspense>
   );
