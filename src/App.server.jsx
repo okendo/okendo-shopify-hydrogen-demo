@@ -4,6 +4,7 @@ import {
   Route,
   FileRoutes,
   ShopifyProvider,
+  ShopifyAnalytics,
   PerformanceMetrics,
   PerformanceMetricsDebug,
 } from '@shopify/hydrogen';
@@ -33,6 +34,7 @@ function App({request}) {
         </ServerCartProvider>
         <PerformanceMetrics />
         {import.meta.env.DEV && <PerformanceMetricsDebug />}
+        <ShopifyAnalytics />
       </ShopifyProvider>
     </Suspense>
   );

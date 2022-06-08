@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "shopify hydrogen dev",
+    "dev": "cross-env LOCAL_DEV=true shopify hydrogen dev",
     "build": "shopify hydrogen build",
     "preview": "shopify hydrogen preview",
     "lint": "eslint --resolve-plugins-relative-to . --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx src",
@@ -31,8 +31,8 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",
-    "@okendo/shopify-hydrogen": "^0.0.7",
-    "@shopify/hydrogen": "^0.22.1",
+    "@okendo/shopify-hydrogen": "^0.0.11",
+    "@shopify/hydrogen": "^0.23.0",
     "@types/react": "^18.0.9",
     "body-parser": "^1.20.0",
     "compression": "^1.7.4",
