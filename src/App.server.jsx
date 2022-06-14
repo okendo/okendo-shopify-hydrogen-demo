@@ -15,12 +15,11 @@ import LoadingFallback from './components/LoadingFallback';
 import ServerCartProvider from './components/ServerCartProvider.server';
 import {OkendoProvider} from '@okendo/shopify-hydrogen';
 
-function App({request}) {
+function App() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <ShopifyProvider>
         <OkendoProvider
-          request={request}
           subscriberId={import.meta.env.VITE_OKENDO_SUBSCRIBER_ID}
           apiDomain={import.meta.env.VITE_OKENDO_API_DOMAIN}
           cdnDomain={import.meta.env.VITE_OKENDO_CDN}
