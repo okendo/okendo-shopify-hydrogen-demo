@@ -3,7 +3,7 @@ import {
   useShopQuery,
   Link,
   Seo,
-  CacheDays,
+  CacheLong,
   useSession,
   useServerAnalytics,
   ShopifyAnalyticsConstants,
@@ -52,7 +52,7 @@ function SeoForHomepage() {
     },
   } = useShopQuery({
     query: SEO_QUERY,
-    cache: CacheDays(),
+    cache: CacheLong(),
     preload: true,
   });
 
