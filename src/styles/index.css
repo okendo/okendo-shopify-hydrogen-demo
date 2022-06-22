@@ -172,3 +172,11 @@ shop-pay-button {
     }
   }
 }
+
+.okeReviews .oke-modal,
+.okeReviews .oke-reviewContent-top .oke-reviewContent-date,
+.okeReviews .oke-w-reviewSimple-helpful .oke-helpful-label,
+.okeReviews .oke-modal .oke-helpful .oke-helpful-vote button.oke-helpful-vote-button,
+.okeReviews .oke-modal .oke-helpful .oke-helpful-vote button.oke-helpful-vote-button:before {
+  color: #333333;
+}
