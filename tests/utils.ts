@@ -1,11 +1,26 @@
-import {chromium} from 'playwright';
+import {
+  chromium,
+  type Page,
+  type Response as PlaywrightResponse,
+} from 'playwright';
 import type {Server} from 'http';
 import {createServer as createViteDevServer} from 'vite';
 
 export const DEFAULT_DELAY = 60000;
 
-export async function startHydrogenServer() {
-  // @ts-ignore
+export interface HydrogenSession {
+  page: Page;
+  visit: (pathname: string) => Promise<PlaywrightResponse | null>;
+}
+
+export interface HydrogenServer {
+  url: (pathname: string) => string;
+  newPage: () => Promise<HydrogenSession>;
+  cleanUp: () => Promise<void>;
+  watchForUpdates: (_module: any) => void;
+}
+
+export async function startHydrogenServer(): Promise<HydrogenServer> {
   const app = import.meta.env.WATCH
     ? await createDevServer()
     : await createNodeServer();
@@ -17,13 +32,13 @@ export async function startHydrogenServer() {
     const page = await browser.newPage();
     return {
       page,
-      visit: async (pathname) => page.goto(url(pathname)),
+      visit: async (pathname: string) => page.goto(url(pathname)),
     };
   };
 
   const cleanUp = async () => {
     await browser.close();
-    await app.server.close();
+    await app.server?.close();
   };
 
   return {url, newPage, cleanUp, watchForUpdates: () => {}};
@@ -52,13 +67,13 @@ async function createDevServer() {
 
   return {
     server: server.httpServer,
-    port: getPortFromAddress(server.httpServer.address()),
+    port: getPortFromAddress(server.httpServer!.address()),
   };
 }
 
 function getPortFromAddress(address: string | any): number {
   if (typeof address === 'string') {
-    return parseInt(address.split(':').pop());
+    return parseInt(address.split(':').pop()!);
   } else {
     return address.port;
   }
