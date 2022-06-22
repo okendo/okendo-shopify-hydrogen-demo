@@ -17,6 +17,9 @@ import type {
   ProductVariantConnection,
 } from '@shopify/hydrogen/storefront-api-types';
 
+import type {OkendoProductFragment} from '@okendo/shopify-hydrogen';
+import {OkendoClientStarRating} from '@okendo/shopify-hydrogen/client';
+
 export function ProductCard({
   product,
   label,
@@ -24,14 +27,13 @@ export function ProductCard({
   loading,
   onClick,
 }: {
-  product: Product;
+  product: Product & OkendoProductFragment;
   label?: string;
   className?: string;
   loading?: HTMLImageElement['loading'];
   onClick?: () => void;
 }) {
   let cardLabel;
-
   const cardData = product?.variants ? product : getProductPlaceholder();
 
   const {
@@ -88,6 +90,12 @@ export function ProductCard({
           >
             {product.title}
           </Text>
+          {product.okendoStarRatingSnippet?.value ? (
+            <OkendoClientStarRating
+              productId={product.id}
+              okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+            />
+          ) : null}
           <div className="flex gap-4">
             <Text className="flex gap-4">
               <Money withoutTrailingZeros data={price!} />
