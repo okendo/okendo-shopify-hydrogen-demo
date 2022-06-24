@@ -4,6 +4,7 @@ import {Link, flattenConnection} from '@shopify/hydrogen';
 import {Button, Grid, ProductCard} from '~/components';
 import {getImageLoadingPriority} from '~/lib/const';
 import type {Collection, Product} from '@shopify/hydrogen/storefront-api-types';
+import {OkendoProductFragment} from '@okendo/shopify-hydrogen';
 
 export function ProductGrid({
   url,
@@ -33,9 +34,9 @@ export function ProductGrid({
 
     // ProductGrid can paginate collection, products and search routes
     // @ts-ignore TODO: Fix types
-    const newProducts: Product[] = flattenConnection<Product>(
-      data?.collection?.products || data?.products || [],
-    );
+    const newProducts: Product & OkendoProductFragment[] = flattenConnection<
+      Product & OkendoProductFragment
+    >(data?.collection?.products || data?.products || []);
     const {endCursor, hasNextPage} = data?.collection?.products?.pageInfo ||
       data?.products?.pageInfo || {endCursor: '', hasNextPage: false};
 
