@@ -34,6 +34,7 @@ export function ProductCard({
   onClick?: () => void;
 }) {
   let cardLabel;
+
   const cardData = product?.variants ? product : getProductPlaceholder();
 
   const {

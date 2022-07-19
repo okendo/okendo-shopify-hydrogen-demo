@@ -1,5 +1,5 @@
 {
-  "name": "okendo-demo-store",
+  "name": "demo-store",
   "description": "Demo store template for @shopify/hydrogen",
   "version": "0.0.0",
   "license": "MIT",
@@ -14,8 +14,8 @@
     "test:ci": "yarn build -t node && vitest run"
   },
   "devDependencies": {
-    "@shopify/cli": "3.0.21",
-    "@shopify/cli-hydrogen": "3.0.21",
+    "@shopify/cli": "^3.0.11",
+    "@shopify/cli-hydrogen": "^3.0.11",
     "@shopify/prettier-config": "^1.1.2",
     "@tailwindcss/forms": "^0.5.2",
     "@tailwindcss/typography": "^0.5.2",
@@ -28,7 +28,7 @@
     "postcss-preset-env": "^7.6.0",
     "prettier": "^2.3.2",
     "tailwindcss": "^3.0.24",
-    "typescript": "^4.7.4",
+    "typescript": "^4.7.2",
     "vite": "^2.9.0",
     "vitest": "^0.15.2"
   },
@@ -36,8 +36,8 @@
   "dependencies": {
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
-    "@okendo/shopify-hydrogen": "^1.0.3",
-    "@shopify/hydrogen": "^1.0.0",
+    "@okendo/shopify-hydrogen": "file:okendo-shopify-hydrogen-1.0.3.tgz",
+    "@shopify/hydrogen": "^1.1.0",
     "clsx": "^1.1.1",
     "graphql-tag": "^2.12.6",
     "react": "^18.2.0",
@@ -45,6 +45,5 @@
     "react-use": "^17.4.0",
     "title": "^3.4.4",
     "typographic-base": "^1.0.4"
-  },
-  "author": "tlgfu"
+  }
 }
