@@ -34,7 +34,7 @@ export function ProductGrid({
 
     // ProductGrid can paginate collection, products and search routes
     // @ts-ignore TODO: Fix types
-    const newProducts: Product & OkendoProductFragment[] = flattenConnection<
+    const newProducts: Product[] & OkendoProductFragment[] = flattenConnection<
       Product & OkendoProductFragment
     >(data?.collection?.products || data?.products || []);
     const {endCursor, hasNextPage} = data?.collection?.products?.pageInfo ||
