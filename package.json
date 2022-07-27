@@ -1,7 +1,7 @@
 {
   "name": "demo-store",
   "description": "Demo store template for @shopify/hydrogen",
-  "version": "1.1.0",
+  "version": "0.0.0",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -36,8 +36,8 @@
   "dependencies": {
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
-    "@okendo/shopify-hydrogen": "^1.1.0",
-    "@shopify/hydrogen": "^1.1.0",
+    "@okendo/shopify-hydrogen": "file:okendo-shopify-hydrogen-1.1.0.tgz",
+    "@shopify/hydrogen": "^1.2.0",
     "clsx": "^1.1.1",
     "graphql-tag": "^2.12.6",
     "react": "^18.2.0",

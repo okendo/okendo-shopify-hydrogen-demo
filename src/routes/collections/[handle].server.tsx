@@ -15,8 +15,6 @@ import {PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
 import {PageHeader, ProductGrid, Section, Text} from '~/components';
 import {NotFound, Layout} from '~/components/index.server';
 
-import {OkendoStarRating} from '@okendo/shopify-hydrogen';
-
 const pageBy = 48;
 
 export default function Collection({params}: HydrogenRouteProps) {
