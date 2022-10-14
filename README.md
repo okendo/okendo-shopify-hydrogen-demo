@@ -13,7 +13,7 @@ You will need to create a `.env` file with the following entries:
 
     VITE_SHOPIFY_STORE_DOMAIN=<your myshopify.com domain e.g. iheartokendo.myshopify.com>
 
-    VITE_SHOPIFY_STOREFRONT_TOKEN=<your shopify storefront token - https://shopify.dev/custom-storefronts/hydrogen/getting-started/create>
+    VITE_SHOPIFY_STOREFRONT_TOKEN=<your shopify storefront token - follow the steps at https://github.com/okendo/okendo-shopify-hydrogen-demo/wiki/Configure-Shopify-Storefront-API>
 
     VITE_OKENDO_SUBSCRIBER_ID=<YOUR OKENDO SUBSCRIBER ID>
 
