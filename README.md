@@ -17,13 +17,6 @@ You will need to create a `.env` file with the following entries:
 
     VITE_OKENDO_SUBSCRIBER_ID=<YOUR OKENDO SUBSCRIBER ID>
 
-# Only use the entries below if you wish to override production Okendo API/CDN values
-
-    VITE_OKENDO_API_DOMAIN=<YOUR OKENDO API DOMAIN - If not supplied defaults to api.okendo.io>
-
-    VITE_OKENDO_CDN=<YOUR OKENDO CDN DOMAIN - If not supplied defaults to cdn.okendo.io>
-
-
 # Hydrogen Demo Store
 
 Hydrogen is a React framework and SDK that you can use to build fast and dynamic Shopify custom storefronts.
