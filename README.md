@@ -1,3 +1,4 @@
+### ⚠️ Shopify [has deprecated Hydrogen v1](https://hydrogen.shopify.dev/updates) ⚠️ — We are in the process of adapting Okendo's widget for Hydrogen v2.
 
 # Okendo Reviews - Hydrogen Demo App
 This demo app is based on the default Shopify Hydrogen app. Learn how to create the default Hydrogen app [here](https://shopify.dev/custom-storefronts/hydrogen/getting-started/create).
