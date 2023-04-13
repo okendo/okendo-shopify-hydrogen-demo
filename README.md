@@ -1,11 +1,15 @@
-### ⚠️ Shopify [has deprecated Hydrogen v1](https://hydrogen.shopify.dev/updates) ⚠️ — We are in the process of adapting Okendo's widget for Hydrogen v2.
+### ⚠️ Shopify [has deprecated Hydrogen v1](https://hydrogen.shopify.dev/updates) ⚠️ — Please see [here](https://github.com/okendo/okendo-shopify-hydrogen-demo) our demo store built with Hydrogen v2 (based on Remix).
+
+### ⚠️ Only use the following if you are using a legacy Hydrogen v1 store ⚠️
 
 # Okendo Reviews - Hydrogen Demo App
+
 This demo app is based on the default Shopify Hydrogen app. Learn how to create the default Hydrogen app [here](https://shopify.dev/custom-storefronts/hydrogen/getting-started/create).
 
 Incorporated in to the app is the Okendo Hydrogen Component Library.
 
 ## Okendo Hydrogen Component Library
+
 For an overview of the component library and technical documentation, please see [here](https://www.npmjs.com/package/@okendo/shopify-hydrogen)
 
 ## Environment Variables
