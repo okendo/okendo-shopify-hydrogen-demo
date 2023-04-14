@@ -40,12 +40,7 @@ import type {
   Shop,
   ProductConnection,
 } from '@shopify/hydrogen/storefront-api-types';
-import {
-  MEDIA_FRAGMENT,
-  OKENDO_PRODUCT_REVIEWS_FRAGMENT,
-  OKENDO_PRODUCT_STAR_RATING_FRAGMENT,
-  PRODUCT_CARD_FRAGMENT,
-} from '~/data/fragments';
+import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import type {Storefront} from '~/lib/type';
 import type {Product} from 'schema-dts';
 import {routeHeaders, CACHE_SHORT} from '~/data/cache';
@@ -54,6 +49,8 @@ import {
   OkendoStarRating,
   WithOkendoStarRatingSnippet,
   WithOkendoReviewsSnippet,
+  OKENDO_PRODUCT_STAR_RATING_FRAGMENT,
+  OKENDO_PRODUCT_REVIEWS_FRAGMENT,
 } from '@okendo/shopify-hydrogen';
 
 export const headers = routeHeaders;

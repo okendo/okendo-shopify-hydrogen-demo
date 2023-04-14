@@ -1,3 +1,5 @@
+import {OKENDO_PRODUCT_STAR_RATING_FRAGMENT} from '@okendo/shopify-hydrogen';
+
 export const MEDIA_FRAGMENT = `#graphql
   fragment Media on Media {
     __typename
@@ -32,28 +34,6 @@ export const MEDIA_FRAGMENT = `#graphql
       id
       embedUrl
       host
-    }
-  }
-`;
-
-export const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
-  fragment OkendoStarRatingSnippet on Product {
-    okendoStarRatingSnippet: metafield(
-      namespace: "okendo"
-      key: "StarRatingSnippet"
-    ) {
-      value
-    }
-  }
-`;
-
-export const OKENDO_PRODUCT_REVIEWS_FRAGMENT = `#graphql
-  fragment OkendoReviewsSnippet on Product {
-    okendoReviewsSnippet: metafield(
-      namespace: "okendo"
-      key: "ReviewsWidgetSnippet"
-    ) {
-      value
     }
   }
 `;
