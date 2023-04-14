@@ -36,12 +36,36 @@ export const MEDIA_FRAGMENT = `#graphql
   }
 `;
 
+export const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
+  fragment OkendoStarRatingSnippet on Product {
+    okendoStarRatingSnippet: metafield(
+      namespace: "okendo"
+      key: "StarRatingSnippet"
+    ) {
+      value
+    }
+  }
+`;
+
+export const OKENDO_PRODUCT_REVIEWS_FRAGMENT = `#graphql
+  fragment OkendoReviewsSnippet on Product {
+    okendoReviewsSnippet: metafield(
+      namespace: "okendo"
+      key: "ReviewsWidgetSnippet"
+    ) {
+      value
+    }
+  }
+`;
+
 export const PRODUCT_CARD_FRAGMENT = `#graphql
+  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
   fragment ProductCard on Product {
     id
     title
     publishedAt
     handle
+    ...OkendoStarRatingSnippet
     variants(first: 1) {
       nodes {
         id

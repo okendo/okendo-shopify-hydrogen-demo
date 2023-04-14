@@ -26,6 +26,7 @@ import {DEFAULT_LOCALE, parseMenu, type EnhancedMenu} from './lib/utils';
 import invariant from 'tiny-invariant';
 import {Shop, Cart} from '@shopify/hydrogen/storefront-api-types';
 import {useAnalytics} from './hooks/useAnalytics';
+import {OkendoProvider, getOkendoProviderData} from '@okendo/shopify-hydrogen';
 
 export const links: LinksFunction = () => {
   return [
@@ -45,6 +46,7 @@ export const links: LinksFunction = () => {
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
   viewport: 'width=device-width,initial-scale=1',
+  'oke:subscriber_id': '<your-okendo-subscriber-id>',
 });
 
 export async function loader({request, context}: LoaderArgs) {
@@ -66,6 +68,10 @@ export async function loader({request, context}: LoaderArgs) {
       shopId: layout.shop.id,
     },
     seo,
+    okendoProviderData: await getOkendoProviderData({
+      context,
+      subscriberId: '<your-okendo-subscriber-id>',
+    }),
   });
 }
 
@@ -84,6 +90,7 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <OkendoProvider okendoProviderData={data.okendoProviderData} />
         <Layout
           layout={data.layout as LayoutData}
           key={`${locale.language}-${locale.country}`}
