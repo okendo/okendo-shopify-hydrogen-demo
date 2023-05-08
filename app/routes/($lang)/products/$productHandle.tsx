@@ -44,6 +44,14 @@ import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
 import type {Storefront} from '~/lib/type';
 import type {Product} from 'schema-dts';
 import {routeHeaders, CACHE_SHORT} from '~/data/cache';
+import {
+  OkendoReviews,
+  OkendoStarRating,
+  WithOkendoStarRatingSnippet,
+  WithOkendoReviewsSnippet,
+  OKENDO_PRODUCT_STAR_RATING_FRAGMENT,
+  OKENDO_PRODUCT_REVIEWS_FRAGMENT,
+} from '@okendo/shopify-hydrogen';
 
 export const headers = routeHeaders;
 
@@ -59,7 +67,10 @@ export async function loader({params, request, context}: LoaderArgs) {
   });
 
   const {shop, product} = await context.storefront.query<{
-    product: ProductType & {selectedVariant?: ProductVariant};
+    product: ProductType & {
+      selectedVariant?: ProductVariant;
+    } & WithOkendoStarRatingSnippet &
+      WithOkendoReviewsSnippet;
     shop: Shop;
   }>(PRODUCT_QUERY, {
     variables: {
@@ -134,6 +145,10 @@ export default function Product() {
                 <Heading as="h1" className="whitespace-normal">
                   {title}
                 </Heading>
+                <OkendoStarRating
+                  productId={product.id}
+                  okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+                />
                 {vendor && (
                   <Text className={'opacity-50 font-medium'}>{vendor}</Text>
                 )}
@@ -165,6 +180,10 @@ export default function Product() {
           </div>
         </div>
       </Section>
+      <OkendoReviews
+        productId={product.id}
+        okendoReviewsSnippet={product.okendoReviewsSnippet}
+      />
       <Suspense fallback={<Skeleton className="h-32" />}>
         <Await
           errorElement="There was a problem loading related products"
@@ -540,7 +559,9 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
 const PRODUCT_QUERY = `#graphql
   ${MEDIA_FRAGMENT}
   ${PRODUCT_VARIANT_FRAGMENT}
-  query Product(
+  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
+  ${OKENDO_PRODUCT_REVIEWS_FRAGMENT}
+query Product(
     $country: CountryCode
     $language: LanguageCode
     $handle: String!
@@ -553,6 +574,8 @@ const PRODUCT_QUERY = `#graphql
       handle
       descriptionHtml
       description
+      ...OkendoStarRatingSnippet
+      ...OkendoReviewsSnippet
       options {
         name
         values
