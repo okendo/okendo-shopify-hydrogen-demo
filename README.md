@@ -9,6 +9,7 @@ This demo store is simply the `demo-store` template [provided by Shopify](https:
 
 ## Requirements
 
+- Your store must be running Okendo Widget Plus - Our newer widget offering. Upgrading is free.
 - Node.js version 16.14.0 or higher.
 
 ## Start the demo store locally
