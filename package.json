@@ -4,7 +4,7 @@
   "sideEffects": false,
   "version": "1.0.1",
   "scripts": {
-    "build": "shopify hydrogen build",
+    "build": "sed -i \"s/<your-okendo-subscriber-id>/$OKENDO_SUBSCRIBER_ID/g\" app/root.tsx && shopify hydrogen build",
     "dev": "shopify hydrogen dev --worker --codegen",
     "preview": "npm run build && shopify hydrogen preview --worker",
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
@@ -13,6 +13,7 @@
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
+    "@okendo/shopify-hydrogen": "^2.1.0",
     "@remix-run/react": "2.1.0",
     "@remix-run/server-runtime": "2.1.0",
     "@shopify/cli": "3.51.0",

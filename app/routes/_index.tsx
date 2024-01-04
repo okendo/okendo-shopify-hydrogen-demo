@@ -1,7 +1,12 @@
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link, type MetaFunction} from '@remix-run/react';
-import {Suspense} from 'react';
+import {
+  OKENDO_PRODUCT_STAR_RATING_FRAGMENT,
+  OkendoStarRating,
+  type WithOkendoStarRatingSnippet,
+} from '@okendo/shopify-hydrogen';
+import {Await, Link, useLoaderData, type MetaFunction} from '@remix-run/react';
 import {Image, Money} from '@shopify/hydrogen';
+import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {Suspense} from 'react';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
@@ -55,7 +60,12 @@ function FeaturedCollection({
 function RecommendedProducts({
   products,
 }: {
-  products: Promise<RecommendedProductsQuery>;
+  products: Promise<{
+    products: {
+      nodes: (RecommendedProductsQuery['products']['nodes'][0] &
+        WithOkendoStarRatingSnippet)[];
+    };
+  }>;
 }) {
   return (
     <div className="recommended-products">
@@ -76,6 +86,10 @@ function RecommendedProducts({
                     sizes="(min-width: 45em) 20vw, 50vw"
                   />
                   <h4>{product.title}</h4>
+                  <OkendoStarRating
+                    productId={product.id}
+                    okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+                  />
                   <small>
                     <Money data={product.priceRange.minVariantPrice} />
                   </small>
@@ -114,6 +128,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
 ` as const;
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
+  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
   fragment RecommendedProduct on Product {
     id
     title
@@ -133,6 +148,7 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
         height
       }
     }
+    ...OkendoStarRatingSnippet
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {

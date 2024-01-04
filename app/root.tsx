@@ -1,27 +1,28 @@
-import {useNonce} from '@shopify/hydrogen';
-import {
-  defer,
-  type SerializeFrom,
-  type LoaderFunctionArgs,
-} from '@shopify/remix-oxygen';
+import {OkendoProvider, getOkendoProviderData} from '@okendo/shopify-hydrogen';
 import {
   Links,
+  LiveReload,
   Meta,
   Outlet,
   Scripts,
-  LiveReload,
-  useMatches,
-  useRouteError,
-  useLoaderData,
   ScrollRestoration,
   isRouteErrorResponse,
+  useLoaderData,
+  useMatches,
+  useRouteError,
   type ShouldRevalidateFunction,
 } from '@remix-run/react';
+import {useNonce} from '@shopify/hydrogen';
 import type {CustomerAccessToken} from '@shopify/hydrogen/storefront-api-types';
-import favicon from '../public/favicon.svg';
-import resetStyles from './styles/reset.css';
-import appStyles from './styles/app.css';
+import {
+  defer,
+  type LoaderFunctionArgs,
+  type SerializeFrom,
+} from '@shopify/remix-oxygen';
 import {Layout} from '~/components/Layout';
+import favicon from '../public/favicon.svg';
+import appStyles from './styles/app.css';
+import resetStyles from './styles/reset.css';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -102,6 +103,10 @@ export async function loader({context}: LoaderFunctionArgs) {
       header: await headerPromise,
       isLoggedIn,
       publicStoreDomain,
+      okendoProviderData: await getOkendoProviderData({
+        context,
+        subscriberId: '<your-okendo-subscriber-id>',
+      }),
     },
     {headers},
   );
@@ -116,10 +121,15 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="oke:subscriber_id" content="<your-okendo-subscriber-id>" />
         <Meta />
         <Links />
       </head>
       <body>
+        <OkendoProvider
+          nonce={nonce}
+          okendoProviderData={data.okendoProviderData}
+        />
         <Layout {...data}>
           <Outlet />
         </Layout>

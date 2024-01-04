@@ -1,30 +1,37 @@
-import {Suspense} from 'react';
-import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {
+  OKENDO_PRODUCT_REVIEWS_FRAGMENT,
+  OKENDO_PRODUCT_STAR_RATING_FRAGMENT,
+  OkendoReviews,
+  OkendoStarRating,
+  type WithOkendoReviewsSnippet,
+  type WithOkendoStarRatingSnippet,
+} from '@okendo/shopify-hydrogen';
 import {
   Await,
   Link,
   useLoaderData,
-  type MetaFunction,
   type FetcherWithComponents,
+  type MetaFunction,
 } from '@remix-run/react';
-import type {
-  ProductFragment,
-  ProductVariantsQuery,
-  ProductVariantFragment,
-} from 'storefrontapi.generated';
-
 import {
+  CartForm,
   Image,
   Money,
   VariantSelector,
-  type VariantOption,
   getSelectedProductOptions,
-  CartForm,
+  type VariantOption,
 } from '@shopify/hydrogen';
 import type {
   CartLineInput,
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
+import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {Suspense} from 'react';
+import type {
+  ProductFragment,
+  ProductVariantFragment,
+  ProductVariantsQuery,
+} from 'storefrontapi.generated';
 import {getVariantUrl} from '~/utils';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
@@ -117,14 +124,21 @@ export default function Product() {
   const {product, variants} = useLoaderData<typeof loader>();
   const {selectedVariant} = product;
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <ProductMain
-        selectedVariant={selectedVariant}
-        product={product}
-        variants={variants}
+    <>
+      <div className="product">
+        <ProductImage image={selectedVariant?.image} />
+        <ProductMain
+          selectedVariant={selectedVariant}
+          product={product}
+          variants={variants}
+        />
+      </div>
+
+      <OkendoReviews
+        productId={product.id}
+        okendoReviewsSnippet={product.okendoReviewsSnippet}
       />
-    </div>
+    </>
   );
 }
 
@@ -150,7 +164,9 @@ function ProductMain({
   product,
   variants,
 }: {
-  product: ProductFragment;
+  product: ProductFragment &
+    WithOkendoStarRatingSnippet &
+    WithOkendoReviewsSnippet;
   selectedVariant: ProductFragment['selectedVariant'];
   variants: Promise<ProductVariantsQuery>;
 }) {
@@ -158,6 +174,10 @@ function ProductMain({
   return (
     <div className="product-main">
       <h1>{title}</h1>
+      <OkendoStarRating
+        productId={product.id}
+        okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+      />
       <ProductPrice selectedVariant={selectedVariant} />
       <br />
       <Suspense
@@ -362,6 +382,8 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
 ` as const;
 
 const PRODUCT_FRAGMENT = `#graphql
+  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
+	${OKENDO_PRODUCT_REVIEWS_FRAGMENT}
   fragment Product on Product {
     id
     title
@@ -385,6 +407,8 @@ const PRODUCT_FRAGMENT = `#graphql
       description
       title
     }
+    ...OkendoStarRatingSnippet
+    ...OkendoReviewsSnippet
   }
   ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;
