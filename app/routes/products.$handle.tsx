@@ -32,7 +32,7 @@ import type {
   ProductVariantFragment,
   ProductVariantsQuery,
 } from 'storefrontapi.generated';
-import {getVariantUrl} from '~/utils';
+import {getVariantUrl} from '~/lib/variants';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.product.title ?? ''}`}];
@@ -395,7 +395,7 @@ const PRODUCT_FRAGMENT = `#graphql
       name
       values
     }
-    selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions) {
+    selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
       ...ProductVariant
     }
     variants(first: 1) {
