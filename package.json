@@ -2,7 +2,7 @@
   "name": "okendo-hydrogen-sandbox",
   "private": true,
   "sideEffects": false,
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "commonjs",
   "scripts": {
     "build": "sed -i \"s/<your-okendo-subscriber-id>/$OKENDO_SUBSCRIBER_ID/g\" app/root.tsx && shopify hydrogen build",
