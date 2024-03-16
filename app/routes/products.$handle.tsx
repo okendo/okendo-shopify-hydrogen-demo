@@ -1,6 +1,4 @@
 import {
-  OKENDO_PRODUCT_REVIEWS_FRAGMENT,
-  OKENDO_PRODUCT_STAR_RATING_FRAGMENT,
   OkendoReviews,
   OkendoStarRating,
   type WithOkendoReviewsSnippet,
@@ -380,6 +378,28 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
     }
   }
 ` as const;
+
+const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
+	fragment OkendoStarRatingSnippet on Product {
+		okendoStarRatingSnippet: metafield(
+			namespace: "okendo"
+			key: "StarRatingSnippet"
+		) {
+			value
+		}
+	}
+`;
+
+const OKENDO_PRODUCT_REVIEWS_FRAGMENT = `#graphql
+	fragment OkendoReviewsSnippet on Product {
+		okendoReviewsSnippet: metafield(
+			namespace: "okendo"
+			key: "ReviewsWidgetSnippet"
+		) {
+			value
+		}
+	}
+`;
 
 const PRODUCT_FRAGMENT = `#graphql
   ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}

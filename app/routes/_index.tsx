@@ -1,5 +1,4 @@
 import {
-  OKENDO_PRODUCT_STAR_RATING_FRAGMENT,
   OkendoStarRating,
   type WithOkendoStarRatingSnippet,
 } from '@okendo/shopify-hydrogen';
@@ -125,6 +124,17 @@ const FEATURED_COLLECTION_QUERY = `#graphql
       }
     }
   }
+` as const;
+
+const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
+	fragment OkendoStarRatingSnippet on Product {
+		okendoStarRatingSnippet: metafield(
+			namespace: "okendo"
+			key: "StarRatingSnippet"
+		) {
+			value
+		}
+	}
 ` as const;
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
