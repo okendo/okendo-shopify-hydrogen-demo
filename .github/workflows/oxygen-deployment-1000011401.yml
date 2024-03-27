@@ -2,29 +2,37 @@
 #! oxygen_storefront_id: 1000011401
 
 name: Storefront 1000011401
+
 on:
-- push
+  push:
+  workflow_dispatch:
+
 permissions:
   contents: read
   deployments: write
+
 jobs:
   deploy:
     name: Deploy to Oxygen
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - run: echo "nvmrc=$(cat .nvmrc)" >> $GITHUB_ENV
-      id: nvmrc
-    - uses: actions/setup-node@v4
-      with:
-        node-version: "${{ env.nvmrc }}"
-        cache: npm
-    - run: npm ci
-    - name: Build and Publish to Oxygen
-      id: deploy
-      env:
-        OKENDO_SUBSCRIBER_ID: "${{ secrets.OKENDO_SUBSCRIBER_ID }}"
-        SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: "${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_1000011401 }}"
-      run: npx shopify hydrogen deploy
 
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: echo "nvmrc=$(cat .nvmrc)" >> $GITHUB_ENV
+        id: nvmrc
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '${{ env.nvmrc }}'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build and Publish to Oxygen
+        id: deploy
+        env:
+          OKENDO_SUBSCRIBER_ID: '${{ secrets.OKENDO_SUBSCRIBER_ID }}'
+          SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: '${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_1000011401 }}'
+        run: npx shopify hydrogen deploy
