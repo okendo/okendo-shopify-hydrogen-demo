@@ -35,4 +35,6 @@ jobs:
         env:
           OKENDO_SUBSCRIBER_ID: '${{ secrets.OKENDO_SUBSCRIBER_ID }}'
           SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: '${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_1000011401 }}'
-        run: npx shopify hydrogen deploy
+        run: |
+          npm run prebuild
+          npx shopify hydrogen deploy --force

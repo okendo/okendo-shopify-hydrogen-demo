@@ -5,7 +5,8 @@
   "version": "2.0.1",
   "type": "commonjs",
   "scripts": {
-    "build": "sed -i \"s/<your-okendo-subscriber-id>/$OKENDO_SUBSCRIBER_ID/g\" app/root.tsx && shopify hydrogen build",
+    "prebuild": "sed -i \"s/<your-okendo-subscriber-id>/$OKENDO_SUBSCRIBER_ID/g\" app/root.tsx",
+    "build": "shopify hydrogen build",
     "dev": "shopify hydrogen dev --codegen",
     "preview": "npm run build && shopify hydrogen preview",
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
