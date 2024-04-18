@@ -1,7 +1,6 @@
 import {OkendoProvider, getOkendoProviderData} from '@okendo/shopify-hydrogen';
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -20,8 +19,8 @@ import {
 } from '@shopify/remix-oxygen';
 import {Layout} from '~/components/Layout';
 import favicon from './assets/favicon.svg';
-import appStyles from './styles/app.css';
-import resetStyles from './styles/reset.css';
+import appStyles from './styles/app.css?url';
+import resetStyles from './styles/reset.css?url';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -134,7 +133,6 @@ export default function App() {
         </Layout>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <LiveReload nonce={nonce} />
       </body>
     </html>
   );
@@ -176,7 +174,6 @@ export function ErrorBoundary() {
         </Layout>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <LiveReload nonce={nonce} />
       </body>
     </html>
   );
