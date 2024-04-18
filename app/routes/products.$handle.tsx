@@ -32,7 +32,7 @@ import type {
 } from 'storefrontapi.generated';
 import {getVariantUrl} from '~/lib/variants';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({data, location}) => {
   return [{title: `Hydrogen | ${data?.product.title ?? ''}`}];
 };
 
