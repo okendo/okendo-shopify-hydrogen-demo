@@ -16,7 +16,7 @@
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
-    "@okendo/shopify-hydrogen": "^2.1.4",
+    "@okendo/shopify-hydrogen": "^2.1.5",
     "@remix-run/react": "^2.8.0",
     "@remix-run/server-runtime": "^2.8.0",
     "@shopify/cli": "3.58.0",
