@@ -2,7 +2,7 @@
   "name": "okendo-shopify-hydrogen-demo",
   "private": true,
   "sideEffects": false,
-  "version": "2.0.2",
+  "version": "2.0.3",
   "shopify-template-version": "1.0.7",
   "type": "module",
   "scripts": {
