@@ -12,7 +12,8 @@
     "preview": "npm run build && shopify hydrogen preview",
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
     "typecheck": "tsc --noEmit",
-    "codegen": "shopify hydrogen codegen"
+    "codegen": "shopify hydrogen codegen",
+    "upgrade": "shopify hydrogen upgrade"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
