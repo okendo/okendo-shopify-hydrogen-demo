@@ -1,3 +1,4 @@
+import { OkendoStarRating, WithOkendoStarRatingSnippet } from '@okendo/shopify-hydrogen';
 import {Link, useLoaderData, type MetaFunction} from '@remix-run/react';
 import {
   Image,
@@ -70,7 +71,7 @@ function ProductItem({
   product,
   loading,
 }: {
-  product: ProductItemFragment;
+  product: ProductItemFragment & WithOkendoStarRatingSnippet;
   loading?: 'eager' | 'lazy';
 }) {
   const variant = product.variants.nodes[0];
@@ -92,6 +93,10 @@ function ProductItem({
         />
       )}
       <h4>{product.title}</h4>
+      <OkendoStarRating
+        productId={product.id}
+        okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+      />
       <small>
         <Money data={product.priceRange.minVariantPrice} />
       </small>
@@ -99,7 +104,19 @@ function ProductItem({
   );
 }
 
+const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
+	fragment OkendoStarRatingSnippet on Product {
+		okendoStarRatingSnippet: metafield(
+			namespace: "okendo"
+			key: "StarRatingSnippet"
+		) {
+			value
+		}
+	}
+` as const;
+
 const PRODUCT_ITEM_FRAGMENT = `#graphql
+  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
   fragment MoneyProductItem on MoneyV2 {
     amount
     currencyCode
@@ -131,6 +148,7 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
         }
       }
     }
+    ...OkendoStarRatingSnippet
   }
 ` as const;
 
