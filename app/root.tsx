@@ -11,7 +11,7 @@ import {
   useRouteError,
   type ShouldRevalidateFunction,
 } from '@remix-run/react';
-import {useNonce} from '@shopify/hydrogen';
+import {useNonce, Analytics, getShopAnalytics} from '@shopify/hydrogen';
 import {
   defer,
   type LoaderFunctionArgs,
@@ -68,10 +68,10 @@ export const useRootLoaderData = () => {
 };
 
 export async function loader({context}: LoaderFunctionArgs) {
-  const {storefront, customerAccount, cart} = context;
-  const publicStoreDomain = context.env.PUBLIC_STORE_DOMAIN;
+  const {storefront, customerAccount, cart, env} = context;
+  const okendoSubscriberId = context;
 
-  const isLoggedInPromise = customerAccount.isLoggedIn();
+  const isLoggedInPromise = customerAccount?.isLoggedIn();
   const cartPromise = cart.get();
 
   // defer the footer query (below the fold)
@@ -96,10 +96,18 @@ export async function loader({context}: LoaderFunctionArgs) {
       footer: footerPromise,
       header: await headerPromise,
       isLoggedIn: isLoggedInPromise,
-      publicStoreDomain,
+      shop: getShopAnalytics({
+        storefront: context.storefront,
+        publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
+      }),
+      consent: {
+        checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
+        storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
+      },
+      okendoSubscriberId,
       okendoProviderData: await getOkendoProviderData({
         context,
-        subscriberId: '<your-okendo-subscriber-id>',
+        subscriberId: env.PUBLIC_OKENDO_SUBSCRIBER_ID,
       }),
     },
     {
@@ -119,20 +127,29 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <meta name="oke:subscriber_id" content="<your-okendo-subscriber-id>" />
+        <meta
+          name="oke:subscriber_id"
+          content={(data.okendoSubscriberId as unknown as string) ?? ''}
+        />
         <Meta />
         <Links />
       </head>
       <body>
-        <OkendoProvider
-          nonce={nonce}
-          okendoProviderData={data.okendoProviderData}
-        />
-        <Layout {...data}>
-          <Outlet />
-        </Layout>
-        <ScrollRestoration nonce={nonce} />
-        <Scripts nonce={nonce} />
+        <Analytics.Provider
+          cart={data.cart}
+          shop={data.shop}
+          consent={data.consent}
+        >
+          <OkendoProvider
+            nonce={nonce}
+            okendoProviderData={data.okendoProviderData}
+          />
+          <Layout {...data}>
+            <Outlet />
+          </Layout>
+          <ScrollRestoration nonce={nonce} />
+          <Scripts nonce={nonce} />
+        </Analytics.Provider>
       </body>
     </html>
   );
