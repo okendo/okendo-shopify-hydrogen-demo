@@ -1,4 +1,7 @@
-import { OkendoStarRating, WithOkendoStarRatingSnippet } from '@okendo/shopify-hydrogen';
+import {
+  OkendoStarRating,
+  type WithOkendoStarRatingSnippet,
+} from '@okendo/shopify-hydrogen';
 import {Link, useLoaderData, type MetaFunction} from '@remix-run/react';
 import {
   Image,
