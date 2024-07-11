@@ -1,11 +1,15 @@
-import {json, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, Link, type MetaFunction} from '@remix-run/react';
 import {
-  Pagination,
-  getPaginationVariables,
+  OkendoStarRating,
+  type WithOkendoStarRatingSnippet,
+} from '@okendo/shopify-hydrogen';
+import {Link, useLoaderData, type MetaFunction} from '@remix-run/react';
+import {
   Image,
   Money,
+  Pagination,
+  getPaginationVariables,
 } from '@shopify/hydrogen';
+import {json, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
 
@@ -81,7 +85,7 @@ function ProductItem({
   product,
   loading,
 }: {
-  product: ProductItemFragment;
+  product: ProductItemFragment & WithOkendoStarRatingSnippet;
   loading?: 'eager' | 'lazy';
 }) {
   const variant = product.variants.nodes[0];
@@ -103,6 +107,10 @@ function ProductItem({
         />
       )}
       <h4>{product.title}</h4>
+      <OkendoStarRating
+        productId={product.id}
+        okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+      />
       <small>
         <Money data={product.priceRange.minVariantPrice} />
       </small>

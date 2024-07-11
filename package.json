@@ -17,7 +17,7 @@
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
-    "@okendo/shopify-hydrogen": "^2.1.5",
+    "@okendo/shopify-hydrogen": "^2.2.1",
     "@remix-run/react": "^2.8.0",
     "@remix-run/server-runtime": "^2.8.0",
     "@shopify/cli": "^3.59.2",
@@ -50,6 +50,6 @@
     "vite-tsconfig-paths": "^4.3.1"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.17.1"
   }
 }

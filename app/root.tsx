@@ -97,7 +97,7 @@ export async function loader({context}: LoaderFunctionArgs) {
       header: await headerPromise,
       isLoggedIn: isLoggedInPromise,
       publicStoreDomain,
-      okendoProviderData: await getOkendoProviderData({
+      okendoProviderData: getOkendoProviderData({
         context,
         subscriberId: '<your-okendo-subscriber-id>',
       }),
@@ -127,12 +127,13 @@ export default function App() {
         <OkendoProvider
           nonce={nonce}
           okendoProviderData={data.okendoProviderData}
-        />
-        <Layout {...data}>
-          <Outlet />
-        </Layout>
-        <ScrollRestoration nonce={nonce} />
-        <Scripts nonce={nonce} />
+        >
+          <Layout {...data}>
+            <Outlet />
+          </Layout>
+          <ScrollRestoration nonce={nonce} />
+          <Scripts nonce={nonce} />
+        </OkendoProvider>
       </body>
     </html>
   );

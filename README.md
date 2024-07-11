@@ -1,7 +1,7 @@
 > **Note**
 > This demo store is built on Hydrogen v2, based on Remix. If you are using a store built with the now deprecated Hydrogen 1, please see [here](https://github.com/okendo/okendo-shopify-hydrogen-demo/tree/hydrogen-1-archive).
 
-> Note: there have been multiple versions of Shopify's Hydrogen demo store. If you project is based on an old version of it, consult our version history to find out how to add Okendo to it.
+> Note: there have been multiple versions of Shopify's Hydrogen demo store. If you project is based on an old version of it, consult the history of this repository.
 
 # Demo store for the Okendo Hydrogen components
 
@@ -17,6 +17,7 @@ This demo store is simply the `demo-store` template [provided by Shopify](https:
 ## Start the demo store locally
 
 You will need to create a `.env` file with the following values from your Hydrogen instance:
+
 ```
 SESSION_SECRET=
 PUBLIC_STORE_DOMAIN=
