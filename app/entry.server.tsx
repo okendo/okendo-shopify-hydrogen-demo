@@ -15,10 +15,15 @@ export default async function handleRequest(
       "'self'",
       "localhost:*",
       "https://cdn.shopify.com",
+      "https://www.google.com",
+      "https://www.gstatic.com",
       "https://d3hw6dc1ow8pp2.cloudfront.net",
       "https://d3g5hqndtiniji.cloudfront.net",
+      "https://dov7r31oq5dkj.cloudfront.net",
       "https://cdn-static.okendo.io",
+      "https://s0gpgg13u6.execute-api.ap-southeast-2.amazonaws.com",
       "https://surveys.okendo.io",
+      "https://api.okendo.io",
       "data:",
     ],
     imgSrc: [
@@ -27,14 +32,20 @@ export default async function handleRequest(
       "data:",
       "https://d3hw6dc1ow8pp2.cloudfront.net",
       "https://d3g5hqndtiniji.cloudfront.net",
+      "https://dov7r31oq5dkj.cloudfront.net",
       "https://cdn-static.okendo.io",
+      "https://s0gpgg13u6.execute-api.ap-southeast-2.amazonaws.com",
       "https://surveys.okendo.io",
+      "https://d2aa2m271lw3pq.cloudfront.net",
     ],
     mediaSrc: [
       "'self'",
       "https://d3hw6dc1ow8pp2.cloudfront.net",
       "https://d3g5hqndtiniji.cloudfront.net",
-      "https://cdn-static.okendo.io"
+      "https://dov7r31oq5dkj.cloudfront.net",
+      "https://cdn-static.okendo.io",
+      "https://s0gpgg13u6.execute-api.ap-southeast-2.amazonaws.com",
+      "https://d2aa2m271lw3pq.cloudfront.net",
     ],
     styleSrcElem: [
       "'self'",
@@ -45,21 +56,30 @@ export default async function handleRequest(
       "https://d3hw6dc1ow8pp2.cloudfront.net",
       "https://cdn-static.okendo.io",
       "https://surveys.okendo.io",
+      "https://s0gpgg13u6.execute-api.ap-southeast-2.amazonaws.com",
     ],
     scriptSrc: [
       "'self'",
       "https://cdn.shopify.com",
       "https://d3hw6dc1ow8pp2.cloudfront.net",
+      "https://dov7r31oq5dkj.cloudfront.net",
       "https://cdn-static.okendo.io",
       "https://surveys.okendo.io",
+      "https://api.okendo.io",
+      "https://www.google.com",
+      "https://www.gstatic.com",
+      "https://s0gpgg13u6.execute-api.ap-southeast-2.amazonaws.com",
     ],
     fontSrc: [
       "'self'",
       "https://fonts.gstatic.com",
       "https://d3hw6dc1ow8pp2.cloudfront.net",
+      "https://d3hw6dc1ow8pp2.cloudfront.net",
+      "https://dov7r31oq5dkj.cloudfront.net",
       "https://cdn.shopify.com",
       "https://cdn-static.okendo.io",
       "https://surveys.okendo.io",
+      "https://s0gpgg13u6.execute-api.ap-southeast-2.amazonaws.com",
     ],
     connectSrc: [
       "'self'",
@@ -69,8 +89,17 @@ export default async function handleRequest(
       "ws://127.0.0.1:*",
       "https://api.okendo.io",
       "https://cdn-static.okendo.io",
+      "https://s0gpgg13u6.execute-api.ap-southeast-2.amazonaws.com",
       "https://surveys.okendo.io",
+      "https://5i27ysv3j8.execute-api.us-west-2.amazonaws.com",
+      "https://api.raygun.com",
+      "https://www.google.com",
+      "https://www.gstatic.com",
     ],
+    frameSrc: [
+      "https://www.google.com",
+      "https://www.gstatic.com"
+    ]
   });
 
   const body = await renderToReadableStream(
