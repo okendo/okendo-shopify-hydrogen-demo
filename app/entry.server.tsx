@@ -81,7 +81,6 @@ export default async function handleRequest(
       "https://api.okendo.io",
       "https://cdn-static.okendo.io",
       "https://surveys.okendo.io",
-      "https://5i27ysv3j8.execute-api.us-west-2.amazonaws.com",
       "https://api.raygun.com",
       "https://www.google.com",
       "https://www.gstatic.com",
