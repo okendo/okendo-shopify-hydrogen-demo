@@ -5,7 +5,6 @@ import type {
 } from 'customer-accountapi.generated';
 import {
   json,
-  redirect,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
@@ -15,6 +14,7 @@ import {
   useNavigation,
   useOutletContext,
   type MetaFunction,
+  type Fetcher,
 } from '@remix-run/react';
 import {
   UPDATE_ADDRESS_MUTATION,
@@ -38,14 +38,7 @@ export const meta: MetaFunction = () => {
 export async function loader({context}: LoaderFunctionArgs) {
   await context.customerAccount.handleAuthStatus();
 
-  return json(
-    {},
-    {
-      headers: {
-        'Set-Cookie': await context.session.commit(),
-      },
-    },
-  );
+  return json({});
 }
 
 export async function action({request, context}: ActionFunctionArgs) {
@@ -68,9 +61,6 @@ export async function action({request, context}: ActionFunctionArgs) {
         {error: {[addressId]: 'Unauthorized'}},
         {
           status: 401,
-          headers: {
-            'Set-Cookie': await context.session.commit(),
-          },
         },
       );
     }
@@ -122,27 +112,17 @@ export async function action({request, context}: ActionFunctionArgs) {
             throw new Error('Customer address create failed.');
           }
 
-          return json(
-            {
-              error: null,
-              createdAddress: data?.customerAddressCreate?.customerAddress,
-              defaultAddress,
-            },
-            {
-              headers: {
-                'Set-Cookie': await context.session.commit(),
-              },
-            },
-          );
+          return json({
+            error: null,
+            createdAddress: data?.customerAddressCreate?.customerAddress,
+            defaultAddress,
+          });
         } catch (error: unknown) {
           if (error instanceof Error) {
             return json(
               {error: {[addressId]: error.message}},
               {
                 status: 400,
-                headers: {
-                  'Set-Cookie': await context.session.commit(),
-                },
               },
             );
           }
@@ -150,9 +130,6 @@ export async function action({request, context}: ActionFunctionArgs) {
             {error: {[addressId]: error}},
             {
               status: 400,
-              headers: {
-                'Set-Cookie': await context.session.commit(),
-              },
             },
           );
         }
@@ -184,27 +161,17 @@ export async function action({request, context}: ActionFunctionArgs) {
             throw new Error('Customer address update failed.');
           }
 
-          return json(
-            {
-              error: null,
-              updatedAddress: address,
-              defaultAddress,
-            },
-            {
-              headers: {
-                'Set-Cookie': await context.session.commit(),
-              },
-            },
-          );
+          return json({
+            error: null,
+            updatedAddress: address,
+            defaultAddress,
+          });
         } catch (error: unknown) {
           if (error instanceof Error) {
             return json(
               {error: {[addressId]: error.message}},
               {
                 status: 400,
-                headers: {
-                  'Set-Cookie': await context.session.commit(),
-                },
               },
             );
           }
@@ -212,9 +179,6 @@ export async function action({request, context}: ActionFunctionArgs) {
             {error: {[addressId]: error}},
             {
               status: 400,
-              headers: {
-                'Set-Cookie': await context.session.commit(),
-              },
             },
           );
         }
@@ -242,23 +206,13 @@ export async function action({request, context}: ActionFunctionArgs) {
             throw new Error('Customer address delete failed.');
           }
 
-          return json(
-            {error: null, deletedAddress: addressId},
-            {
-              headers: {
-                'Set-Cookie': await context.session.commit(),
-              },
-            },
-          );
+          return json({error: null, deletedAddress: addressId});
         } catch (error: unknown) {
           if (error instanceof Error) {
             return json(
               {error: {[addressId]: error.message}},
               {
                 status: 400,
-                headers: {
-                  'Set-Cookie': await context.session.commit(),
-                },
               },
             );
           }
@@ -266,9 +220,6 @@ export async function action({request, context}: ActionFunctionArgs) {
             {error: {[addressId]: error}},
             {
               status: 400,
-              headers: {
-                'Set-Cookie': await context.session.commit(),
-              },
             },
           );
         }
@@ -279,9 +230,6 @@ export async function action({request, context}: ActionFunctionArgs) {
           {error: {[addressId]: 'Method not allowed'}},
           {
             status: 405,
-            headers: {
-              'Set-Cookie': await context.session.commit(),
-            },
           },
         );
       }
@@ -292,9 +240,6 @@ export async function action({request, context}: ActionFunctionArgs) {
         {error: error.message},
         {
           status: 400,
-          headers: {
-            'Set-Cookie': await context.session.commit(),
-          },
         },
       );
     }
@@ -302,9 +247,6 @@ export async function action({request, context}: ActionFunctionArgs) {
       {error},
       {
         status: 400,
-        headers: {
-          'Set-Cookie': await context.session.commit(),
-        },
       },
     );
   }
@@ -423,9 +365,7 @@ export function AddressForm({
   address: CustomerAddressInput;
   defaultAddress: CustomerFragment['defaultAddress'];
   children: (props: {
-    stateForMethod: (
-      method: 'PUT' | 'POST' | 'DELETE',
-    ) => ReturnType<typeof useNavigation>['state'];
+    stateForMethod: (method: 'PUT' | 'POST' | 'DELETE') => Fetcher['state'];
   }) => React.ReactNode;
 }) {
   const {state, formMethod} = useNavigation();
