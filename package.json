@@ -5,6 +5,7 @@
   "version": "2024.10.1",
   "type": "module",
   "scripts": {
+    "prebuild": "sed -i \"s/<your-okendo-subscriber-id>/$OKENDO_SUBSCRIBER_ID/g\" app/root.tsx",
     "build": "shopify hydrogen build --codegen",
     "dev": "shopify hydrogen dev --codegen",
     "preview": "shopify hydrogen preview --build",
@@ -14,6 +15,7 @@
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
+    "@okendo/shopify-hydrogen": "^2.2.7",
     "@remix-run/react": "^2.13.1",
     "@remix-run/server-runtime": "^2.13.1",
     "@shopify/hydrogen": "2024.10.0",

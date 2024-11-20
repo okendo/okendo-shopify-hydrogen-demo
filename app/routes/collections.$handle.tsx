@@ -1,14 +1,15 @@
-import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, Link, type MetaFunction} from '@remix-run/react';
+import {OkendoStarRating} from '@okendo/shopify-hydrogen';
+import {Link, useLoaderData, type MetaFunction} from '@remix-run/react';
 import {
+  Analytics,
   getPaginationVariables,
   Image,
   Money,
-  Analytics,
 } from '@shopify/hydrogen';
+import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import type {ProductItemFragment} from 'storefrontapi.generated';
-import {useVariantUrl} from '~/lib/variants';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {useVariantUrl} from '~/lib/variants';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
@@ -127,6 +128,10 @@ function ProductItem({
         />
       )}
       <h4>{product.title}</h4>
+      <OkendoStarRating
+        productId={product.id}
+        okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+      />
       <small>
         <Money data={product.priceRange.minVariantPrice} />
       </small>
@@ -134,7 +139,19 @@ function ProductItem({
   );
 }
 
+const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
+  fragment OkendoStarRatingSnippet on Product {
+    okendoStarRatingSnippet: metafield(
+      namespace: "okendo"
+      key: "StarRatingSnippet"
+    ) {
+      value
+    }
+  }
+` as const;
+
 const PRODUCT_ITEM_FRAGMENT = `#graphql
+  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
   fragment MoneyProductItem on MoneyV2 {
     amount
     currencyCode
@@ -166,6 +183,7 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
         }
       }
     }
+    ...OkendoStarRatingSnippet
   }
 ` as const;
 
