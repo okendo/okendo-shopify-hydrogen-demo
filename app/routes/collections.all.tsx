@@ -1,33 +1,51 @@
-import {
-  OkendoStarRating,
-  type WithOkendoStarRatingSnippet,
-} from '@okendo/shopify-hydrogen';
+import {OkendoStarRating} from '@okendo/shopify-hydrogen';
 import {Link, useLoaderData, type MetaFunction} from '@remix-run/react';
-import {
-  Image,
-  Money,
-  Pagination,
-  getPaginationVariables,
-} from '@shopify/hydrogen';
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
+import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import type {ProductItemFragment} from 'storefrontapi.generated';
+import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {useVariantUrl} from '~/lib/variants';
 
 export const meta: MetaFunction<typeof loader> = () => {
   return [{title: `Hydrogen | Products`}];
 };
 
-export async function loader({request, context}: LoaderFunctionArgs) {
+export async function loader(args: LoaderFunctionArgs) {
+  // Start fetching non-critical data without blocking time to first byte
+  const deferredData = loadDeferredData(args);
+
+  // Await the critical data required to render initial state of the page
+  const criticalData = await loadCriticalData(args);
+
+  return defer({...deferredData, ...criticalData});
+}
+
+/**
+ * Load data necessary for rendering content above the fold. This is the critical data
+ * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
+ */
+async function loadCriticalData({context, request}: LoaderFunctionArgs) {
   const {storefront} = context;
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 8,
   });
 
-  const {products} = await storefront.query(CATALOG_QUERY, {
-    variables: {...paginationVariables},
-  });
+  const [{products}] = await Promise.all([
+    storefront.query(CATALOG_QUERY, {
+      variables: {...paginationVariables},
+    }),
+    // Add other queries here, so that they are loaded in parallel
+  ]);
+  return {products};
+}
 
-  return json({products});
+/**
+ * Load data for rendering content below the fold. This data is deferred and will be
+ * fetched after the initial page load. If it's unavailable, the page should still 200.
+ * Make sure to not throw any errors here, as it will cause the page to 500.
+ */
+function loadDeferredData({context}: LoaderFunctionArgs) {
+  return {};
 }
 
 export default function Collection() {
@@ -36,36 +54,18 @@ export default function Collection() {
   return (
     <div className="collection">
       <h1>Products</h1>
-      <Pagination connection={products}>
-        {({nodes, isLoading, PreviousLink, NextLink}) => (
-          <>
-            <PreviousLink>
-              {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
-            </PreviousLink>
-            <ProductsGrid products={nodes} />
-            <br />
-            <NextLink>
-              {isLoading ? 'Loading...' : <span>Load more ↓</span>}
-            </NextLink>
-          </>
-        )}
-      </Pagination>
-    </div>
-  );
-}
-
-function ProductsGrid({products}: {products: ProductItemFragment[]}) {
-  return (
-    <div className="products-grid">
-      {products.map((product, index) => {
-        return (
+      <PaginatedResourceSection
+        connection={products}
+        resourcesClassName="products-grid"
+      >
+        {({node: product, index}) => (
           <ProductItem
             key={product.id}
             product={product}
             loading={index < 8 ? 'eager' : undefined}
           />
-        );
-      })}
+        )}
+      </PaginatedResourceSection>
     </div>
   );
 }
@@ -74,7 +74,7 @@ function ProductItem({
   product,
   loading,
 }: {
-  product: ProductItemFragment & WithOkendoStarRatingSnippet;
+  product: ProductItemFragment;
   loading?: 'eager' | 'lazy';
 }) {
   const variant = product.variants.nodes[0];
@@ -108,14 +108,14 @@ function ProductItem({
 }
 
 const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
-	fragment OkendoStarRatingSnippet on Product {
-		okendoStarRatingSnippet: metafield(
-			namespace: "okendo"
-			key: "StarRatingSnippet"
-		) {
-			value
-		}
-	}
+  fragment OkendoStarRatingSnippet on Product {
+    okendoStarRatingSnippet: metafield(
+      namespace: "okendo"
+      key: "StarRatingSnippet"
+    ) {
+      value
+    }
+  }
 ` as const;
 
 const PRODUCT_ITEM_FRAGMENT = `#graphql
