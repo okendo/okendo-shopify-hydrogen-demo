@@ -142,8 +142,8 @@ function ProductItem({
 const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
   fragment OkendoStarRatingSnippet on Product {
     okendoStarRatingSnippet: metafield(
-      namespace: "okendo"
-      key: "StarRatingSnippet"
+      namespace: "app—1576377—reviews"
+      key: "star_rating_snippet"
     ) {
       value
     }

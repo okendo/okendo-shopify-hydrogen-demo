@@ -247,8 +247,8 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
 const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
   fragment OkendoStarRatingSnippet on Product {
     okendoStarRatingSnippet: metafield(
-      namespace: "okendo"
-      key: "StarRatingSnippet"
+      namespace: "app—1576377—reviews"
+      key: "star_rating_snippet"
     ) {
       value
     }
@@ -258,8 +258,8 @@ const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
 const OKENDO_PRODUCT_REVIEWS_FRAGMENT = `#graphql
   fragment OkendoReviewsSnippet on Product {
     okendoReviewsSnippet: metafield(
-      namespace: "okendo"
-      key: "ReviewsWidgetSnippet"
+      namespace: "app—1576377—reviews"
+      key: "reviews_widget_snippet"
     ) {
       value
     }
