@@ -1,23 +1,22 @@
-import {OkendoProvider, getOkendoProviderData} from '@okendo/shopify-hydrogen';
+import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
+  Outlet,
+  useRouteError,
+  isRouteErrorResponse,
+  type ShouldRevalidateFunction,
   Links,
   Meta,
-  Outlet,
   Scripts,
   ScrollRestoration,
-  isRouteErrorResponse,
-  useRouteError,
   useRouteLoaderData,
-  type ShouldRevalidateFunction,
-} from '@remix-run/react';
-import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+} from 'react-router';
 import favicon from '~/assets/favicon.svg';
-import {PageLayout} from '~/components/PageLayout';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
-import appStyles from '~/styles/app.css?url';
 import resetStyles from '~/styles/reset.css?url';
+import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
+import {PageLayout} from './components/PageLayout';
 
 export type RootLoader = typeof loader;
 
@@ -28,7 +27,6 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   formMethod,
   currentUrl,
   nextUrl,
-  defaultShouldRevalidate,
 }) => {
   // revalidate when a mutation is performed e.g add to cart, login...
   if (formMethod && formMethod !== 'GET') return true;
@@ -36,14 +34,26 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   // revalidate when manually revalidating via useRevalidator
   if (currentUrl.toString() === nextUrl.toString()) return true;
 
-  return defaultShouldRevalidate;
+  // Defaulting to no revalidation for root loader data to improve performance.
+  // When using this feature, you risk your UI getting out of sync with your server.
+  // Use with caution. If you are uncomfortable with this optimization, update the
+  // line below to `return defaultShouldRevalidate` instead.
+  // For more details see: https://remix.run/docs/en/main/route/should-revalidate
+  return false;
 };
 
+/**
+ * The main and reset stylesheets are added in the Layout component
+ * to prevent a bug in development HMR updates.
+ *
+ * This avoids the "failed to execute 'insertBefore' on 'Node'" error
+ * that occurs after editing and navigating to another page.
+ *
+ * It's a temporary fix until the issue is resolved.
+ * https://github.com/remix-run/remix/issues/9242
+ */
 export function links() {
   return [
-    {rel: 'stylesheet', href: tailwindCss},
-    {rel: 'stylesheet', href: resetStyles},
-    {rel: 'stylesheet', href: appStyles},
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',
@@ -65,7 +75,7 @@ export async function loader(args: LoaderFunctionArgs) {
 
   const {storefront, env} = args.context;
 
-  return defer({
+  return {
     ...deferredData,
     ...criticalData,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
@@ -81,11 +91,7 @@ export async function loader(args: LoaderFunctionArgs) {
       country: args.context.storefront.i18n.country,
       language: args.context.storefront.i18n.language,
     },
-    okendoProviderData: getOkendoProviderData({
-      context: args.context,
-      subscriberId: '<your-okendo-subscriber-id>',
-    }),
-  });
+  };
 }
 
 /**
@@ -145,24 +151,21 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <meta name="oke:subscriber_id" content="<your-okendo-subscriber-id>" />
+        <link rel="stylesheet" href={tailwindCss}></link>
+        <link rel="stylesheet" href={resetStyles}></link>
+        <link rel="stylesheet" href={appStyles}></link>
         <Meta />
         <Links />
       </head>
       <body>
         {data ? (
-          <OkendoProvider
-            nonce={nonce}
-            okendoProviderData={data.okendoProviderData}
+          <Analytics.Provider
+            cart={data.cart}
+            shop={data.shop}
+            consent={data.consent}
           >
-            <Analytics.Provider
-              cart={data.cart}
-              shop={data.shop}
-              consent={data.consent}
-            >
-              <PageLayout {...data}>{children}</PageLayout>
-            </Analytics.Provider>
-          </OkendoProvider>
+            <PageLayout {...data}>{children}</PageLayout>
+          </Analytics.Provider>
         ) : (
           children
         )}

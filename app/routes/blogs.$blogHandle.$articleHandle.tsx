@@ -1,6 +1,7 @@
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from '@remix-run/react';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {useLoaderData, type MetaFunction} from 'react-router';
 import {Image} from '@shopify/hydrogen';
+import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.article.title ?? ''} article`}];
@@ -13,14 +14,18 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return defer({...deferredData, ...criticalData});
+  return {...deferredData, ...criticalData};
 }
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
-async function loadCriticalData({context, params}: LoaderFunctionArgs) {
+async function loadCriticalData({
+  context,
+  request,
+  params,
+}: LoaderFunctionArgs) {
   const {blogHandle, articleHandle} = params;
 
   if (!articleHandle || !blogHandle) {
@@ -37,6 +42,18 @@ async function loadCriticalData({context, params}: LoaderFunctionArgs) {
   if (!blog?.articleByHandle) {
     throw new Response(null, {status: 404});
   }
+
+  redirectIfHandleIsLocalized(
+    request,
+    {
+      handle: articleHandle,
+      data: blog.articleByHandle,
+    },
+    {
+      handle: blogHandle,
+      data: blog,
+    },
+  );
 
   const article = blog.articleByHandle;
 
@@ -67,7 +84,8 @@ export default function Article() {
       <h1>
         {title}
         <div>
-          {publishedDate} &middot; {author?.name}
+          <time dateTime={article.publishedAt}>{publishedDate}</time> &middot;{' '}
+          <address>{author?.name}</address>
         </div>
       </h1>
 
@@ -89,7 +107,9 @@ const ARTICLE_QUERY = `#graphql
     $language: LanguageCode
   ) @inContext(language: $language, country: $country) {
     blog(handle: $blogHandle) {
+      handle
       articleByHandle(handle: $articleHandle) {
+        handle
         title
         contentHtml
         publishedAt

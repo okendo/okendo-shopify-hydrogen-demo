@@ -1,8 +1,9 @@
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type MetaFunction} from '@remix-run/react';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {Link, useLoaderData, type MetaFunction} from 'react-router';
 import {Image, getPaginationVariables} from '@shopify/hydrogen';
 import type {ArticleItemFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.blog.title ?? ''} blog`}];
@@ -15,7 +16,7 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return defer({...deferredData, ...criticalData});
+  return {...deferredData, ...criticalData};
 }
 
 /**
@@ -48,6 +49,8 @@ async function loadCriticalData({
   if (!blog?.articles) {
     throw new Response('Not found', {status: 404});
   }
+
+  redirectIfHandleIsLocalized(request, {handle: params.blogHandle, data: blog});
 
   return {blog};
 }
@@ -128,6 +131,7 @@ const BLOGS_QUERY = `#graphql
   ) @inContext(language: $language) {
     blog(handle: $blogHandle) {
       title
+      handle
       seo {
         title
         description

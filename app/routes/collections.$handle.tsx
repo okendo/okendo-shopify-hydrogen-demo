@@ -1,15 +1,9 @@
-import {OkendoStarRating} from '@okendo/shopify-hydrogen';
-import {Link, useLoaderData, type MetaFunction} from '@remix-run/react';
-import {
-  Analytics,
-  getPaginationVariables,
-  Image,
-  Money,
-} from '@shopify/hydrogen';
-import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import type {ProductItemFragment} from 'storefrontapi.generated';
+import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {useLoaderData, type MetaFunction} from 'react-router';
+import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
-import {useVariantUrl} from '~/lib/variants';
+import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {ProductItem} from '~/components/ProductItem';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
@@ -22,7 +16,7 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return defer({...deferredData, ...criticalData});
+  return {...deferredData, ...criticalData};
 }
 
 /**
@@ -56,6 +50,9 @@ async function loadCriticalData({
       status: 404,
     });
   }
+
+  // The API handle might be localized, so redirect to the localized handle
+  redirectIfHandleIsLocalized(request, {handle, data: collection});
 
   return {
     collection,
@@ -102,56 +99,7 @@ export default function Collection() {
   );
 }
 
-function ProductItem({
-  product,
-  loading,
-}: {
-  product: ProductItemFragment;
-  loading?: 'eager' | 'lazy';
-}) {
-  const variant = product.variants.nodes[0];
-  const variantUrl = useVariantUrl(product.handle, variant.selectedOptions);
-  return (
-    <Link
-      className="product-item"
-      key={product.id}
-      prefetch="intent"
-      to={variantUrl}
-    >
-      {product.featuredImage && (
-        <Image
-          alt={product.featuredImage.altText || product.title}
-          aspectRatio="1/1"
-          data={product.featuredImage}
-          loading={loading}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
-      )}
-      <h4>{product.title}</h4>
-      <OkendoStarRating
-        productId={product.id}
-        okendoStarRatingSnippet={product.okendoStarRatingSnippet}
-      />
-      <small>
-        <Money data={product.priceRange.minVariantPrice} />
-      </small>
-    </Link>
-  );
-}
-
-const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
-  fragment OkendoStarRatingSnippet on Product {
-    okendoStarRatingSnippet: metafield(
-      namespace: "okendo"
-      key: "StarRatingSnippet"
-    ) {
-      value
-    }
-  }
-` as const;
-
 const PRODUCT_ITEM_FRAGMENT = `#graphql
-  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
   fragment MoneyProductItem on MoneyV2 {
     amount
     currencyCode
@@ -175,15 +123,6 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
         ...MoneyProductItem
       }
     }
-    variants(first: 1) {
-      nodes {
-        selectedOptions {
-          name
-          value
-        }
-      }
-    }
-    ...OkendoStarRatingSnippet
   }
 ` as const;
 

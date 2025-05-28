@@ -3,7 +3,7 @@ import {
   useNavigate,
   type FormProps,
   type Fetcher,
-} from '@remix-run/react';
+} from 'react-router';
 import React, {useRef, useEffect} from 'react';
 import type {PredictiveSearchReturn} from '~/lib/search';
 import {useAside} from './Aside';
