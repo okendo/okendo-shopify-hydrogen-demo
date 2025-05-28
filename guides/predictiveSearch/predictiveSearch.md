@@ -87,19 +87,21 @@ const PREDICTIVE_SEARCH_PRODUCT_FRAGMENT = `#graphql
     title
     handle
     trackingParameters
-    variants(first: 1) {
-      nodes {
-        id
-        image {
-          url
-          altText
-          width
-          height
-        }
-        price {
-          amount
-          currencyCode
-        }
+    selectedOrFirstAvailableVariant(
+      selectedOptions: []
+      ignoreUnknownOptions: true
+      caseInsensitiveMatch: true
+    ) {
+      id
+      image {
+        url
+        altText
+        width
+        height
+      }
+      price {
+        amount
+        currencyCode
       }
     }
   }
@@ -157,7 +159,7 @@ const PREDICTIVE_SEARCH_QUERY = `#graphql
 /**
  * Predictive search fetcher
  */
-async function predictiveSeach({
+async function predictiveSearch({
   request,
   context,
 }: Pick<ActionFunctionArgs, 'request' | 'context'>) {
@@ -192,7 +194,7 @@ async function predictiveSeach({
 
   const total = Object.values(items).reduce((acc, {length}) => acc + length, 0);
 
-  return json({term, result: {items, total}, error: null});
+  return {term, result: {items, total}, error: null};
 }
 ```
 
@@ -215,7 +217,7 @@ export async function loader({request, context}: LoaderFunctionArgs) {
   const isPredictive = url.searchParams.has('predictive');
 
   if (!isPredictive) {
-    return json({})
+    return {}
   }
 
   const searchPromise = predictiveSearch({request, context})
@@ -225,7 +227,7 @@ export async function loader({request, context}: LoaderFunctionArgs) {
     return {term: '', result: null, error: error.message};
   });
 
-  return json(await searchPromise);
+  return await searchPromise;
 }
 ```
 
@@ -358,7 +360,8 @@ SearchResultsPredictive.Products = function ({
             trackingParams: product.trackingParameters,
             term: term.current,
           });
-+         const image = product?.variants?.nodes?.[0].image;
++         const price = product?.selectedOrFirstAvailableVariant?.price;
++         const image = product?.selectedOrFirstAvailableVariant?.image;
           return (
             <li className="predictive-search-result-item" key={product.id}>
               <Link to={productUrl} onClick={closeSearch}>
@@ -373,11 +376,11 @@ SearchResultsPredictive.Products = function ({
                 <div>
                   <p>{product.title}</p>
                   <small>
-                  {product?.variants?.nodes?.[0].price && (
-                    <Money
-                      data={product.variants.nodes[0].price}
-                    />
-                  )}
++                 {price && (
++                   <Money
++                     data={price}
++                   />
++                 )}
                   </small>
                 </div>
               </Link>

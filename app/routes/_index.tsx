@@ -1,12 +1,12 @@
-import {OkendoStarRating} from '@okendo/shopify-hydrogen';
-import {Await, Link, useLoaderData, type MetaFunction} from '@remix-run/react';
-import {Image, Money} from '@shopify/hydrogen';
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {Await, useLoaderData, Link, type MetaFunction} from 'react-router';
 import {Suspense} from 'react';
+import {Image, Money} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
+import {ProductItem} from '~/components/ProductItem';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -19,7 +19,7 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return defer({...deferredData, ...criticalData});
+  return {...deferredData, ...criticalData};
 }
 
 /**
@@ -102,28 +102,7 @@ function RecommendedProducts({
             <div className="recommended-products-grid">
               {response
                 ? response.products.nodes.map((product) => (
-                    <Link
-                      key={product.id}
-                      className="recommended-product"
-                      to={`/products/${product.handle}`}
-                    >
-                      <Image
-                        data={product.images.nodes[0]}
-                        aspectRatio="1/1"
-                        sizes="(min-width: 45em) 20vw, 50vw"
-                      />
-                      <h4>{product.title}</h4>
-                      <OkendoStarRating
-                        productId={product.id}
-                        okendoStarRatingSnippet={
-                          product.okendoStarRatingSnippet
-                        }
-                        placeholder={<div className="h-6" />}
-                      />
-                      <small>
-                        <Money data={product.priceRange.minVariantPrice} />
-                      </small>
-                    </Link>
+                    <ProductItem key={product.id} product={product} />
                   ))
                 : null}
             </div>
@@ -158,19 +137,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
   }
 ` as const;
 
-const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
-  fragment OkendoStarRatingSnippet on Product {
-    okendoStarRatingSnippet: metafield(
-      namespace: "okendo"
-      key: "StarRatingSnippet"
-    ) {
-      value
-    }
-  }
-` as const;
-
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
   fragment RecommendedProduct on Product {
     id
     title
@@ -181,16 +148,13 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
         currencyCode
       }
     }
-    images(first: 1) {
-      nodes {
-        id
-        url
-        altText
-        width
-        height
-      }
+    featuredImage {
+      id
+      url
+      altText
+      width
+      height
     }
-    ...OkendoStarRatingSnippet
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
