@@ -1,9 +1,10 @@
+import {Analytics, getPaginationVariables} from '@shopify/hydrogen';
 import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from 'react-router';
-import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
-import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ProductItem} from '~/components/ProductItem';
+import {OKENDO_PRODUCT_STAR_RATING_FRAGMENT} from '~/lib/fragments';
+import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
@@ -100,6 +101,7 @@ export default function Collection() {
 }
 
 const PRODUCT_ITEM_FRAGMENT = `#graphql
+  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
   fragment MoneyProductItem on MoneyV2 {
     amount
     currencyCode
@@ -123,6 +125,7 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
         ...MoneyProductItem
       }
     }
+    ...OkendoStarRatingSnippet
   }
 ` as const;
 

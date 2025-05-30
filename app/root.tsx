@@ -1,22 +1,23 @@
+import {OkendoProvider, getOkendoProviderData} from '@okendo/shopify-hydrogen';
 import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
-  Outlet,
-  useRouteError,
-  isRouteErrorResponse,
-  type ShouldRevalidateFunction,
   Links,
   Meta,
+  Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
+  useRouteError,
   useRouteLoaderData,
+  type ShouldRevalidateFunction,
 } from 'react-router';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
-import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
-import tailwindCss from './styles/tailwind.css?url';
+import resetStyles from '~/styles/reset.css?url';
 import {PageLayout} from './components/PageLayout';
+import tailwindCss from './styles/tailwind.css?url';
 
 export type RootLoader = typeof loader;
 
@@ -139,6 +140,10 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
     cart: cart.get(),
     isLoggedIn: customerAccount.isLoggedIn(),
     footer,
+    okendoProviderData: getOkendoProviderData({
+      context,
+      subscriberId: '<your-okendo-subscriber-id>',
+    }),
   };
 }
 
@@ -151,6 +156,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="oke:subscriber_id" content="<your-okendo-subscriber-id>" />
         <link rel="stylesheet" href={tailwindCss}></link>
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
@@ -159,13 +165,18 @@ export function Layout({children}: {children?: React.ReactNode}) {
       </head>
       <body>
         {data ? (
-          <Analytics.Provider
-            cart={data.cart}
-            shop={data.shop}
-            consent={data.consent}
+          <OkendoProvider
+            nonce={nonce}
+            okendoProviderData={data.okendoProviderData}
           >
-            <PageLayout {...data}>{children}</PageLayout>
-          </Analytics.Provider>
+            <Analytics.Provider
+              cart={data.cart}
+              shop={data.shop}
+              consent={data.consent}
+            >
+              <PageLayout {...data}>{children}</PageLayout>
+            </Analytics.Provider>
+          </OkendoProvider>
         ) : (
           children
         )}

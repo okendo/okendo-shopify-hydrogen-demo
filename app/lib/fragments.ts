@@ -231,3 +231,25 @@ export const FOOTER_QUERY = `#graphql
   }
   ${MENU_FRAGMENT}
 ` as const;
+
+export const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
+  fragment OkendoStarRatingSnippet on Product {
+    okendoStarRatingSnippet: metafield(
+      namespace: "app--1576377--reviews"
+      key: "star_rating_snippet"
+    ) {
+      value
+    }
+  }
+` as const;
+
+export const OKENDO_PRODUCT_REVIEWS_FRAGMENT = `#graphql
+  fragment OkendoReviewsSnippet on Product {
+    okendoReviewsSnippet: metafield(
+      namespace: "app--1576377--reviews"
+      key: "reviews_widget_snippet"
+    ) {
+      value
+    }
+  }
+` as const;

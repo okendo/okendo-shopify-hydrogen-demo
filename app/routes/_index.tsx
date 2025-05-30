@@ -1,12 +1,14 @@
+import {OkendoReviewsCarousel} from '@okendo/shopify-hydrogen';
+import {Image} from '@shopify/hydrogen';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link, type MetaFunction} from 'react-router';
 import {Suspense} from 'react';
-import {Image, Money} from '@shopify/hydrogen';
+import {Await, Link, useLoaderData, type MetaFunction} from 'react-router';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
+import {OKENDO_PRODUCT_STAR_RATING_FRAGMENT} from '~/lib/fragments';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -62,6 +64,7 @@ export default function Homepage() {
     <div className="home">
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
+      <OkendoReviewsCarousel />
     </div>
   );
 }
@@ -138,6 +141,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
 ` as const;
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
+  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
   fragment RecommendedProduct on Product {
     id
     title
@@ -155,6 +159,7 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       width
       height
     }
+    ...OkendoStarRatingSnippet
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {

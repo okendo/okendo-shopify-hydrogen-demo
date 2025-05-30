@@ -1,7 +1,4 @@
-# Don't change the line below!
-#! oxygen_storefront_id: 1000011401
-
-name: Storefront 1000011401
+name: Storefront 1000036421
 
 on:
   push:
@@ -31,10 +28,9 @@ jobs:
       - run: npm ci
 
       - name: Build and Publish to Oxygen
-        id: deploy
         env:
-          OKENDO_SUBSCRIBER_ID: '${{ secrets.OKENDO_SUBSCRIBER_ID }}'
-          SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: '${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_1000011401 }}'
+          OKENDO_SUBSCRIBER_ID: '${{ secrets.OKENDO_SUBSCRIBER_ID_1000036421 }}'
+          SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: '${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_1000036421 }}'
         run: |
           npm run prebuild
           npx shopify hydrogen deploy --force

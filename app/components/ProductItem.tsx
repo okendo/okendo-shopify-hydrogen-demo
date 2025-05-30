@@ -1,8 +1,9 @@
-import {Link} from 'react-router';
+import {OkendoStarRating} from '@okendo/shopify-hydrogen';
 import {Image, Money} from '@shopify/hydrogen';
+import {Link} from 'react-router';
 import type {
-  ProductItemFragment,
   CollectionItemFragment,
+  ProductItemFragment,
   RecommendedProductFragment,
 } from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
@@ -36,6 +37,11 @@ export function ProductItem({
         />
       )}
       <h4>{product.title}</h4>
+      <OkendoStarRating
+        className="mb-2"
+        productId={product.id}
+        okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+      />
       <small>
         <Money data={product.priceRange.minVariantPrice} />
       </small>
