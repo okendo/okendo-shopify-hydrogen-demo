@@ -1,16 +1,21 @@
-import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {OkendoReviews, OkendoStarRating} from '@okendo/shopify-hydrogen';
 import {
-  getSelectedProductOptions,
   Analytics,
-  useOptimisticVariant,
-  getProductOptions,
   getAdjacentAndFirstAvailableVariants,
+  getProductOptions,
+  getSelectedProductOptions,
+  useOptimisticVariant,
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
-import {ProductPrice} from '~/components/ProductPrice';
-import {ProductImage} from '~/components/ProductImage';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {useLoaderData, type MetaFunction} from 'react-router';
 import {ProductForm} from '~/components/ProductForm';
+import {ProductImage} from '~/components/ProductImage';
+import {ProductPrice} from '~/components/ProductPrice';
+import {
+  OKENDO_PRODUCT_REVIEWS_FRAGMENT,
+  OKENDO_PRODUCT_STAR_RATING_FRAGMENT,
+} from '~/lib/fragments';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
@@ -102,44 +107,56 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <div className="product-main">
-        <h1>{title}</h1>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
+    <>
+      <div className="product">
+        <ProductImage image={selectedVariant?.image} />
+        <div className="product-main">
+          <h1>{title}</h1>
+          <OkendoStarRating
+            className="mb-4"
+            productId={product.id}
+            okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+          />
+          <ProductPrice
+            price={selectedVariant?.price}
+            compareAtPrice={selectedVariant?.compareAtPrice}
+          />
+          <br />
+          <ProductForm
+            productOptions={productOptions}
+            selectedVariant={selectedVariant}
+          />
+          <br />
+          <br />
+          <p>
+            <strong>Description</strong>
+          </p>
+          <br />
+          <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+          <br />
+        </div>
+        <Analytics.ProductView
+          data={{
+            products: [
+              {
+                id: product.id,
+                title: product.title,
+                price: selectedVariant?.price.amount || '0',
+                vendor: product.vendor,
+                variantId: selectedVariant?.id || '',
+                variantTitle: selectedVariant?.title || '',
+                quantity: 1,
+              },
+            ],
+          }}
         />
-        <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
-        </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
       </div>
-      <Analytics.ProductView
-        data={{
-          products: [
-            {
-              id: product.id,
-              title: product.title,
-              price: selectedVariant?.price.amount || '0',
-              vendor: product.vendor,
-              variantId: selectedVariant?.id || '',
-              variantTitle: selectedVariant?.title || '',
-              quantity: 1,
-            },
-          ],
-        }}
+
+      <OkendoReviews
+        productId={product.id}
+        okendoReviewsSnippet={product.okendoReviewsSnippet}
       />
-    </div>
+    </>
   );
 }
 
@@ -181,6 +198,8 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
 ` as const;
 
 const PRODUCT_FRAGMENT = `#graphql
+  ${OKENDO_PRODUCT_STAR_RATING_FRAGMENT}
+  ${OKENDO_PRODUCT_REVIEWS_FRAGMENT}
   fragment Product on Product {
     id
     title
@@ -217,6 +236,8 @@ const PRODUCT_FRAGMENT = `#graphql
       description
       title
     }
+    ...OkendoStarRatingSnippet
+    ...OkendoReviewsSnippet
   }
   ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;
