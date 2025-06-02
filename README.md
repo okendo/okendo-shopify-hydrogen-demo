@@ -1,9 +1,9 @@
 > **Note**
-> This demo store is built on Hydrogen v2, based on Remix. If you are using a store built with the now deprecated Hydrogen 1, please see [here](https://github.com/okendo/okendo-shopify-hydrogen-demo/tree/hydrogen-1-archive).
+> This demo store is built on Hydrogen v2. If you are using a store built with the now deprecated Hydrogen 1, please see [here](https://github.com/okendo/okendo-shopify-hydrogen-demo/tree/hydrogen-1-archive).
 
-> Note: there have been multiple versions of Shopify's Hydrogen demo store. If you project is based on an old version of it, consult the history of this repository.
+> **Note**: there have been multiple versions of Shopify's Hydrogen demo store. If you project is based on an old version of it, consult the history of this repository.
 
-# Demo store for Okendo's Hydrogen components
+# Demo store for Okendo's Hydrogen (React Router) components
 
 Please read the [documentation of the `@okendo/shopify-hydrogen` library](https://www.npmjs.com/package/@okendo/shopify-hydrogen).
 
