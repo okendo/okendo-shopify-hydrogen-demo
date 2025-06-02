@@ -71,6 +71,7 @@ export default async function handleRequest(
     ],
     fontSrc: [
       "'self'",
+      'data:',
       'https://fonts.gstatic.com',
       'https://d3hw6dc1ow8pp2.cloudfront.net',
       'https://dov7r31oq5dkj.cloudfront.net',

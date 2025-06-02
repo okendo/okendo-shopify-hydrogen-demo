@@ -92,6 +92,7 @@ export async function loader(args: LoaderFunctionArgs) {
       country: args.context.storefront.i18n.country,
       language: args.context.storefront.i18n.language,
     },
+    customerAccessToken: await args.context.customerAccount.getAccessToken(),
   };
 }
 
@@ -143,6 +144,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
     okendoProviderData: getOkendoProviderData({
       context,
       subscriberId: '<your-okendo-subscriber-id>',
+      okendoProducts: ['reviews', 'loyalty'],
     }),
   };
 }
@@ -168,6 +170,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
           <OkendoProvider
             nonce={nonce}
             okendoProviderData={data.okendoProviderData}
+            customerAccessToken={data.customerAccessToken}
           >
             <Analytics.Provider
               cart={data.cart}
