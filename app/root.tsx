@@ -1,13 +1,12 @@
-import {OkendoProvider, getOkendoProviderData} from '@okendo/shopify-hydrogen';
+import {getOkendoProviderData, OkendoProvider} from '@okendo/shopify-hydrogen';
 import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
-import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  isRouteErrorResponse,
   useRouteError,
   useRouteLoaderData,
   type ShouldRevalidateFunction,
@@ -16,6 +15,7 @@ import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import appStyles from '~/styles/app.css?url';
 import resetStyles from '~/styles/reset.css?url';
+import type {Route} from './+types/root';
 import {PageLayout} from './components/PageLayout';
 import tailwindCss from './styles/tailwind.css?url';
 
@@ -67,7 +67,7 @@ export function links() {
   ];
 }
 
-export async function loader(args: LoaderFunctionArgs) {
+export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
 
@@ -99,7 +99,7 @@ export async function loader(args: LoaderFunctionArgs) {
  * Load data necessary for rendering content above the fold. This is the critical data
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
-async function loadCriticalData({context}: LoaderFunctionArgs) {
+async function loadCriticalData({context}: Route.LoaderArgs) {
   const {storefront} = context;
 
   const [header] = await Promise.all([
@@ -120,7 +120,7 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-function loadDeferredData({context}: LoaderFunctionArgs) {
+function loadDeferredData({context}: Route.LoaderArgs) {
   const {storefront, customerAccount, cart} = context;
 
   // defer the footer query (below the fold)
@@ -131,7 +131,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
         footerMenuHandle: 'footer', // Adjust to your footer menu handle
       },
     })
-    .catch((error) => {
+    .catch((error: Error) => {
       // Log query errors, but don't throw them so the page can still render
       console.error(error);
       return null;
@@ -149,7 +149,6 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
-  const data = useRouteLoaderData<RootLoader>('root');
 
   return (
     <html lang="en">
@@ -164,22 +163,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <Links />
       </head>
       <body>
-        {data ? (
-          <OkendoProvider
-            nonce={nonce}
-            okendoProviderData={data.okendoProviderData}
-          >
-            <Analytics.Provider
-              cart={data.cart}
-              shop={data.shop}
-              consent={data.consent}
-            >
-              <PageLayout {...data}>{children}</PageLayout>
-            </Analytics.Provider>
-          </OkendoProvider>
-        ) : (
-          children
-        )}
+        {children}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
@@ -188,7 +172,26 @@ export function Layout({children}: {children?: React.ReactNode}) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const data = useRouteLoaderData<RootLoader>('root');
+  const nonce = useNonce();
+
+  if (!data) {
+    return <Outlet />;
+  }
+
+  return (
+    <OkendoProvider nonce={nonce} okendoProviderData={data.okendoProviderData}>
+      <Analytics.Provider
+        cart={data.cart}
+        shop={data.shop}
+        consent={data.consent}
+      >
+        <PageLayout {...data}>
+          <Outlet />
+        </PageLayout>
+      </Analytics.Provider>
+    </OkendoProvider>
+  );
 }
 
 export function ErrorBoundary() {
