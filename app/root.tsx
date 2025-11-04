@@ -173,14 +173,13 @@ export function Layout({children}: {children?: React.ReactNode}) {
 
 export default function App() {
   const data = useRouteLoaderData<RootLoader>('root');
-  const nonce = useNonce();
 
   if (!data) {
     return <Outlet />;
   }
 
   return (
-    <OkendoProvider nonce={nonce} okendoProviderData={data.okendoProviderData}>
+    <OkendoProvider okendoProviderData={data.okendoProviderData}>
       <Analytics.Provider
         cart={data.cart}
         shop={data.shop}
