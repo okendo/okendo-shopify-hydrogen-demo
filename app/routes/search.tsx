@@ -409,9 +409,7 @@ async function predictiveSearch({
 
   if (errors) {
     throw new Error(
-      `Shopify API errors: ${errors
-        .map(({message}: {message: string}) => message)
-        .join(', ')}`,
+      `Shopify API errors: ${errors.map(({message}: {message: string}) => message).join(', ')}`,
     );
   }
 

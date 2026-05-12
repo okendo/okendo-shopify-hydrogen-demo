@@ -1,23 +1,23 @@
-import {getOkendoProviderData, OkendoProvider} from '@okendo/shopify-hydrogen';
 import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
+import {getOkendoProviderData, OkendoProvider} from '@okendo/shopify-hydrogen';
 import {
+  Outlet,
+  useRouteError,
   isRouteErrorResponse,
+  type ShouldRevalidateFunction,
   Links,
   Meta,
-  Outlet,
   Scripts,
   ScrollRestoration,
-  useRouteError,
   useRouteLoaderData,
-  type ShouldRevalidateFunction,
 } from 'react-router';
+import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
-import appStyles from '~/styles/app.css?url';
 import resetStyles from '~/styles/reset.css?url';
-import type {Route} from './+types/root';
-import {PageLayout} from './components/PageLayout';
+import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
+import {PageLayout} from './components/PageLayout';
 
 export type RootLoader = typeof loader;
 

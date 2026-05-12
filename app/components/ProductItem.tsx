@@ -1,9 +1,9 @@
-import {OkendoStarRating} from '@okendo/shopify-hydrogen';
-import {Image, Money} from '@shopify/hydrogen';
 import {Link} from 'react-router';
+import {Image, Money} from '@shopify/hydrogen';
+import {OkendoStarRating} from '@okendo/shopify-hydrogen';
 import type {
-  CollectionItemFragment,
   ProductItemFragment,
+  CollectionItemFragment,
   RecommendedProductFragment,
 } from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';

@@ -1,10 +1,10 @@
-import {getPaginationVariables} from '@shopify/hydrogen';
+import type {Route} from './+types/collections.all';
 import {useLoaderData} from 'react-router';
-import type {CollectionItemFragment} from 'storefrontapi.generated';
+import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
+import type {CollectionItemFragment} from 'storefrontapi.generated';
 import {OKENDO_PRODUCT_STAR_RATING_FRAGMENT} from '~/lib/fragments';
-import type {Route} from './+types/collections.all';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: `Hydrogen | Products`}];

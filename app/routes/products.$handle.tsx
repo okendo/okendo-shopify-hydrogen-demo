@@ -1,22 +1,22 @@
-import {OkendoReviews, OkendoStarRating} from '@okendo/shopify-hydrogen';
+import {redirect, useLoaderData} from 'react-router';
+import type {Route} from './+types/products.$handle';
 import {
-  Analytics,
-  getAdjacentAndFirstAvailableVariants,
-  getProductOptions,
   getSelectedProductOptions,
+  Analytics,
   useOptimisticVariant,
+  getProductOptions,
+  getAdjacentAndFirstAvailableVariants,
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
-import {useLoaderData} from 'react-router';
-import {ProductForm} from '~/components/ProductForm';
-import {ProductImage} from '~/components/ProductImage';
+import {OkendoReviews, OkendoStarRating} from '@okendo/shopify-hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
+import {ProductImage} from '~/components/ProductImage';
+import {ProductForm} from '~/components/ProductForm';
+import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {
   OKENDO_PRODUCT_REVIEWS_FRAGMENT,
   OKENDO_PRODUCT_STAR_RATING_FRAGMENT,
 } from '~/lib/fragments';
-import {redirectIfHandleIsLocalized} from '~/lib/redirect';
-import type {Route} from './+types/products.$handle';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
