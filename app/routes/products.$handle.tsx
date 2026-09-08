@@ -112,6 +112,7 @@ export default function Product() {
             className="mb-4"
             productId={product.id}
             okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+            okendoStarRatingSnippetV2={product.okendoStarRatingSnippetV2}
           />
           <ProductPrice
             price={selectedVariant?.price}
@@ -151,6 +152,7 @@ export default function Product() {
       <OkendoReviews
         productId={product.id}
         okendoReviewsSnippet={product.okendoReviewsSnippet}
+        okendoReviewsSnippetV2={product.okendoReviewsSnippetV2}
       />
     </>
   );

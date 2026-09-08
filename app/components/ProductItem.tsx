@@ -41,6 +41,7 @@ export function ProductItem({
         className="mb-2"
         productId={product.id}
         okendoStarRatingSnippet={product.okendoStarRatingSnippet}
+        okendoStarRatingSnippetV2={product.okendoStarRatingSnippetV2}
       />
       <small>
         <Money data={product.priceRange.minVariantPrice} />

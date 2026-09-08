@@ -241,11 +241,20 @@ export const FOOTER_QUERY = `#graphql
   ${MENU_FRAGMENT}
 ` as const;
 
+// Fetch both the legacy (V1) and the SSR (V2) snippets. The Okendo components
+// prefer the V2 snippet when present and fall back to V1, so passing both is all
+// that's needed to render SSR metafields for stores on the Vue 3 / SSR rollout.
 export const OKENDO_PRODUCT_STAR_RATING_FRAGMENT = `#graphql
   fragment OkendoStarRatingSnippet on Product {
     okendoStarRatingSnippet: metafield(
       namespace: "app--1576377--reviews"
       key: "star_rating_snippet"
+    ) {
+      value
+    }
+    okendoStarRatingSnippetV2: metafield(
+      namespace: "app--1576377--reviews"
+      key: "star_rating_snippet_v2"
     ) {
       value
     }
@@ -257,6 +266,12 @@ export const OKENDO_PRODUCT_REVIEWS_FRAGMENT = `#graphql
     okendoReviewsSnippet: metafield(
       namespace: "app--1576377--reviews"
       key: "reviews_widget_snippet"
+    ) {
+      value
+    }
+    okendoReviewsSnippetV2: metafield(
+      namespace: "app--1576377--reviews"
+      key: "reviews_widget_snippet_v2"
     ) {
       value
     }

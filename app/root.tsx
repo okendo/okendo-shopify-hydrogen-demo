@@ -142,7 +142,7 @@ function loadDeferredData({context}: Route.LoaderArgs) {
     footer,
     okendoProviderData: getOkendoProviderData({
       context,
-      subscriberId: '<your-okendo-subscriber-id>',
+      subscriberId: '1068630b-3eac-44cd-a274-0061cfe9381b',
     }),
   };
 }
@@ -155,7 +155,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <meta name="oke:subscriber_id" content="<your-okendo-subscriber-id>" />
+        <meta name="oke:subscriber_id" content="1068630b-3eac-44cd-a274-0061cfe9381b" />
         <link rel="stylesheet" href={tailwindCss}></link>
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
@@ -179,7 +179,13 @@ export default function App() {
   }
 
   return (
-    <OkendoProvider okendoProviderData={data.okendoProviderData}>
+    <OkendoProvider
+      okendoProviderData={data.okendoProviderData}
+      widgetVersion="vue3"
+      // Local dev: load the Vue 3 bundle from the tgz's dist, served from /public
+      // (see the "sync:vue3-widget" script). Remove once the Vue 3 bundle is on the CDN.
+      reviewsScriptUrl="/oke-widget-vue3/js/oke-reviews.js"
+    >
       <Analytics.Provider
         cart={data.cart}
         shop={data.shop}
